@@ -1,39 +1,20 @@
-package com.alexapps.resistencia
+package com.alexapps.resistencia.main
 
-import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import com.alexapps.resistencia.databinding.ActivityMainBinding
-
-
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var mainBinding: ActivityMainBinding //colocado la actividad principal, paso 1
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        //paso 2
-        mainBinding = ActivityMainBinding.inflate(layoutInflater)//colocado la actividad principal
-        val view = mainBinding.root //colocado la actividad principal,
-        setContentView(view)
-
-        //paso 3
-        with(mainBinding){
-            botonCalcular.setOnClickListener {
-                val banda1 = banda1Spinner.selectedItem.toString()
-                val banda2 = banda2Spinner.selectedItem.toString()
-                val banda3 = banda3Spinner.selectedItem.toString()
-                val porcentaje = porcentajeSpinner.selectedItem.toString()
-                calcular(banda1, banda2, banda3, porcentaje)
-            }
-        }
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
 
 
-    }
+class MainViewModel: ViewModel() {
 
-    @SuppressLint("SetTextI18n")
-    private fun calcular(banda1: String, banda2: String, banda3: String, porcentaje: String) {
+    //tipo de dato que puede ser observado por fuera de la actividad afuera
+    private val Resultado: MutableLiveData<String> = MutableLiveData()
+    val resultadoDone: LiveData<String> = Resultado
+
+    //funciones para trabajar
+
+    fun calcular(banda1: String, banda2: String, banda3: String, porcentaje: String) {
+
         var valor = ""
 
         when (banda1) {
@@ -84,7 +65,6 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
-
         when (porcentaje) {
             "Marron" -> valor += " " + "±1%"
             "Rojo" -> valor += " " + "±2%"
@@ -96,8 +76,7 @@ class MainActivity : AppCompatActivity() {
             "Plata" -> valor += " " + "±10%"
         }
 
-        mainBinding.resultadoTextview.text = getString(R.string.Resultado) + valor
+        Resultado.value = valor
     }
-
 
 }
